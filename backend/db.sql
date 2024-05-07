@@ -1,0 +1,33 @@
+CREATE TABLE Users (
+  userID SERIAL PRIMARY KEY,
+  username TEXT NOT NULL,
+  email TEXT NOT NULL UNIQUE,
+  password TEXT NOT NULL,
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Books (
+  bookID SERIAL PRIMARY KEY,
+  title TEXT NOT NULL,
+  author TEXT NOT NULL,
+  publishedDate DATE,
+  bookDescription TEXT,
+  thumbnailURL TEXT,
+  googleBooksID TEXT UNIQUE
+);
+
+CREATE TABLE UserBooks (
+  userBookID SERIAL PRIMARY KEY,
+  userID INTEGER REFERENCES Users(userID),
+  bookID INTEGER REFERENCES Books(bookID),
+  addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Reviews (
+  reviewID SERIAL PRIMARY KEY,
+  userID INTEGER REFERENCES Users(userID),
+  bookID INTEGER REFERENCES Books(bookID),
+  rating INTEGER CHECK (rating >= 1 AND rating <= 5),
+  comment TEXT,
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
