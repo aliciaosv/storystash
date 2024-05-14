@@ -1,5 +1,5 @@
 CREATE TABLE Users (
-  userID SERIAL PRIMARY KEY,
+  userID INTEGER PRIMARY KEY,
   username TEXT NOT NULL,
   email TEXT NOT NULL UNIQUE,
   password TEXT NOT NULL,
@@ -7,7 +7,7 @@ CREATE TABLE Users (
 );
 
 CREATE TABLE Books (
-  bookID SERIAL PRIMARY KEY,
+  bookID INTEGER PRIMARY KEY,
   title TEXT NOT NULL,
   author TEXT NOT NULL,
   publishedDate DATE,
@@ -17,14 +17,14 @@ CREATE TABLE Books (
 );
 
 CREATE TABLE UserBooks (
-  userBookID SERIAL PRIMARY KEY,
+  userBookID INTEGER PRIMARY KEY,
   userID INTEGER REFERENCES Users(userID),
   bookID INTEGER REFERENCES Books(bookID),
   addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE Reviews (
-  reviewID SERIAL PRIMARY KEY,
+  reviewID INTEGER PRIMARY KEY,
   userID INTEGER REFERENCES Users(userID),
   bookID INTEGER REFERENCES Books(bookID),
   rating INTEGER CHECK (rating >= 1 AND rating <= 5),
