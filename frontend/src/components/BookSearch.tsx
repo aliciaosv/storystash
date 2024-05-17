@@ -16,21 +16,35 @@ interface Book {
 const BookSearch: React.FC = () => {
   const [search, setSearch] = useState<string>('')
   const [books, setBooks] = useState<Book[]>([])
+  const [startIndex] = useState<number>(0)
+  const [maxResults] = useState<number>(15)
   // const history = useHistory()
 
-  const api = (query:string): string => {
+  const api = (query:string, startIndex: number, maxResults: number): string => {
     const key = 'AIzaSyDV7p5ENjVvrTddyECfRTJIdVPSJv8KzA0'
-    return `https://www.googleapis.com/books/v1/volumes?q=${query}&printType=books&key=${key}`
+    const startParam = `startIndex=${startIndex}`
+    const maxParam = `maxResults=${maxResults}`
+    return `https://www.googleapis.com/books/v1/volumes?q=${query}&printType=books&${startParam}&${maxParam}&key=${key}`
   }
 
   const searchBook = async (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       try {
-        const response = await axios.get(api(search))
+        const response = await axios.get(api(search, startIndex, maxResults))
         setBooks(response.data.items)
       } catch (error) {
         console.error('Nu gick det fel: ', error)
       }
+    }
+  }
+
+  const moreBooks = async () => {
+    const value = startIndex + maxResults
+    try {
+      const response = await axios.get(api(search, value, maxResults))
+      setBooks([...books, ...(response.data.items || [])])
+    } catch (error) {
+      console.error('Fel i moreBooks', error)
     }
   }
 
@@ -67,6 +81,7 @@ const BookSearch: React.FC = () => {
               </div>
             </div>
           ))}
+          <button onClick={moreBooks}>Ladda fler böcker</button>
         </div>
       )}
     </div>
