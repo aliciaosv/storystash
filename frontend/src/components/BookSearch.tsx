@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import axios from 'axios'
-// import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 interface Book {
   id: string
@@ -17,8 +17,9 @@ const BookSearch: React.FC = () => {
   const [search, setSearch] = useState<string>('')
   const [books, setBooks] = useState<Book[]>([])
   const [startIndex] = useState<number>(0)
-  const [maxResults] = useState<number>(15)
-  // const history = useHistory()
+  const [maxResults] = useState<number>(10)
+  const navigate = useNavigate()
+
 
   const api = (query:string, startIndex: number, maxResults: number): string => {
     const key = 'AIzaSyDV7p5ENjVvrTddyECfRTJIdVPSJv8KzA0'
@@ -27,14 +28,31 @@ const BookSearch: React.FC = () => {
     return `https://www.googleapis.com/books/v1/volumes?q=${query}&printType=books&${startParam}&${maxParam}&key=${key}`
   }
 
-  const searchBook = async (event: React.KeyboardEvent<HTMLInputElement>) => {
+  // const searchBook = async (event: React.KeyboardEvent<HTMLInputElement>) => {
+  //   if (event.key === 'Enter') {
+  //     try {
+  //       const response = await axios.get(api(search, startIndex, maxResults))
+  //       setBooks(response.data.items)
+  //       console.log(response.data.items)
+  //     } catch (error) {
+  //       console.error('Nu gick det fel: ', error)
+  //     }
+  //   }
+  // }
+
+  const searchBook = async () => {
+    try {
+      const response = await axios.get(api(search, startIndex, maxResults))
+      setBooks(response.data.items)
+      console.log(response.data.items)
+    } catch (error) {
+      console.error('Nu gick det fel: ', error)
+    }
+  }
+
+  const alternateSearch = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      try {
-        const response = await axios.get(api(search, startIndex, maxResults))
-        setBooks(response.data.items)
-      } catch (error) {
-        console.error('Nu gick det fel: ', error)
-      }
+      searchBook();
     }
   }
 
@@ -52,9 +70,11 @@ const BookSearch: React.FC = () => {
     return book.volumeInfo.imageLinks?.thumbnail ?? 'src/assets/placeholder.png'
   }
 
-  // const resultModal = (bookId: string) => {
-  //   // history.push(`/result-modal/${bookId}`)
-  // }
+  const chosen = (bookId: string) => {
+    navigate(`/${bookId}`)
+  }
+
+
 
   return (
     <div>
@@ -64,9 +84,10 @@ const BookSearch: React.FC = () => {
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          onKeyDown={searchBook}
+          onKeyDown={alternateSearch}
           placeholder="T.ex Karin Boye, Pippi..."
         />
+        <button onClick={searchBook}>Sök</button>
       </div>
 
       {books.length > 0 && (
@@ -77,7 +98,7 @@ const BookSearch: React.FC = () => {
               <div>
                 <h4>{book.volumeInfo.title}</h4>
                 <p>{book.volumeInfo.description}</p>
-                {/* <button onClick={() => resultModal(book.id)}>Läs mer om boken</button> */}
+                <button onClick={() => chosen(book.id)}>Läs mer</button>
               </div>
             </div>
           ))}

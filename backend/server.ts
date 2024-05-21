@@ -3,6 +3,7 @@ import express from 'express'
 import * as sqlite from 'sqlite'
 import { Database } from 'sqlite'
 import sqlite3 from 'sqlite3'
+import bcrypt from 'bcrypt'
 let database: Database
 
 ;(async () => {
@@ -23,13 +24,29 @@ app.get('/', (_request, response) => {
 })
 
 //Användarroutes:
-app.post('/storystash/users', async (req, res) => {
+app.post('/storystash/register', async (req, res) => {
   try {
-    const { username, email, password } = req.body
-    const result = await database.run('INSERT INTO Users (username, email, password) VALUES (?, ?, ?)', [username, email, password])
-    res.status(201).json({ message: 'Användare skapad!', userID: result.lastID })
+    const { username, email, password } = req.body;
+    const result = await database.run('INSERT INTO Users (username, email, password) VALUES (?, ?, ?)', [username, email, password]);
+    res.status(201).json({ message: 'Användare skapad!', userID: result.lastID });
   } catch (error) {
-    res.status(500).json({ error: (error as Error).message })
+    res.status(500).json({ error: (error as Error).message });
+  }
+})
+
+app.post('/storystash/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await database.get('SELECT * FROM Users WHERE email = ?', [email]);
+    if (!user) {
+      return res.status(404).json({ message: 'Användaren hittades inte' });
+    }
+    if (password !== user.password) {
+      return res.status(401).json({ message: 'Felaktigt lösenord, prova igen!' });
+    }
+    res.status(200).json({ userID: user.userID, username: user.username, email: user.email });
+  } catch (error) {
+    res.status(500).json({ error: (error as Error).message });
   }
 })
 

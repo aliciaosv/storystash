@@ -1,13 +1,13 @@
-// import { useState } from 'react'
+
 import './App.css'
 import './components/BookSearch'
-import BookSearch from './components/BookSearch'
+import AppRoutes from './routes'
 
-const App: React.FC = () => {
+function App() {
   return (
-    <>
-      <BookSearch />
-    </>
+    <div>
+      <AppRoutes />
+    </div>
   )
 }
 
