@@ -28,18 +28,6 @@ const BookSearch: React.FC = () => {
     return `https://www.googleapis.com/books/v1/volumes?q=${query}&printType=books&${startParam}&${maxParam}&key=${key}`
   }
 
-  // const searchBook = async (event: React.KeyboardEvent<HTMLInputElement>) => {
-  //   if (event.key === 'Enter') {
-  //     try {
-  //       const response = await axios.get(api(search, startIndex, maxResults))
-  //       setBooks(response.data.items)
-  //       console.log(response.data.items)
-  //     } catch (error) {
-  //       console.error('Nu gick det fel: ', error)
-  //     }
-  //   }
-  // }
-
   const searchBook = async () => {
     try {
       const response = await axios.get(api(search, startIndex, maxResults))

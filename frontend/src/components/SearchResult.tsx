@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useNavigate, useParams } from 'react-router-dom'
+import { useUser } from './UserContext'
 
 interface Book {
   volumeInfo: {
@@ -11,7 +12,7 @@ interface Book {
     language: string
     industryIdentifiers: { identifier: string }[]
     categories: string[]
-    description: string
+    description?: string
     imageLinks?: {thumbnail: string}
   }
 }
@@ -21,15 +22,19 @@ const SearchResult: React.FC = () => {
   const [filteredDescription, setFilteredDescription] = useState<string | null>(null)
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
+  const { user } = useUser()
 
   useEffect(() => {
     const bookDetails = async () => {
       try {
         const response = await axios.get(`https://www.googleapis.com/books/v1/volumes/${id}`)
-        setBook(response.data)
-        setFilteredDescription(response.data.volumeInfo.description.replace(/<p[^>]*>/g, '').replace(/<\/p>/g, ''))
-      }catch (error) {
-        console.error('SearchResult strular', error)
+        const bookData = response.data
+        setBook(bookData)
+        if (bookData.volumeInfo.description) {
+          setFilteredDescription(bookData.volumeInfo.description.replace(/<p[^>]*>/g, '').replace(/<\/p>/g, ''))
+        }
+      } catch (error) {
+        console.error('Knas i bookDetails', error)
       }
     }
 
@@ -40,7 +45,34 @@ const SearchResult: React.FC = () => {
     navigate('/')
   }
 
+  const profile = () => {
+    navigate('/userpage')
+  }
+
   const bookCover = book?.volumeInfo.imageLinks?.thumbnail || 'src/assets/placeholder.png'
+
+  const saveBook = async (book: Book) => {
+    if (!user) {
+      alert('Du måste vara inloggad för att spara en bok')
+      return
+    }
+
+    try {
+      const response = await axios.post('http://localhost:3004/storystash/user-bookshelf', {
+        userID: user.id,
+        googleBooksID: id,
+        title: book.volumeInfo.title,
+        author: book.volumeInfo.authors?.[0] || 'Okänd författare',
+        thumbnailURL: book.volumeInfo.imageLinks?.thumbnail || ''
+      })
+      if (response.status === 201) {
+        alert('Boken är tillagd i din bokhylla!')
+      }
+      console.log(response.data.message)
+    } catch (error) {
+      console.error('Kunde inte spara boken, försök igen', error)
+    }
+  }
 
   return (
     <div>
@@ -49,19 +81,21 @@ const SearchResult: React.FC = () => {
           <div>
             <div>
             <h2>{book.volumeInfo.title}</h2>
-              <h3>{book.volumeInfo.authors.join(', ')}</h3>
-              <p>Utgivningsår: {book.volumeInfo.publishedDate}</p>
-              <p>Förlag: {book.volumeInfo.publisher}</p>
-              <p>Språk: {book.volumeInfo.language}</p>
-              <p>ISBN: {book.volumeInfo.industryIdentifiers[0].identifier}</p>
-              <p>Genre: {book.volumeInfo.categories.join(', ')}</p>
+              <h3>{book.volumeInfo.authors?.join(', ') || 'Okänd författare'}</h3>
+              <p>Utgivningsår: {book.volumeInfo.publishedDate || 'Ej tillgängligt'}</p>
+              <p>Förlag: {book.volumeInfo.publisher || 'Ej tillgängligt'}</p>
+              <p>Språk: {book.volumeInfo.language || 'Ej tillgängligt'}</p>
+              <p>ISBN: {book.volumeInfo.industryIdentifiers?.[0]?.identifier || 'Okänt'}</p>
+              <p>Genre: {book.volumeInfo.categories?.join(', ') || 'Ej tillgängligt'}</p>
               <p>Om: {filteredDescription}</p>
             </div>
             <div>
               <img src={bookCover} alt={book.volumeInfo.title} />
             </div>
           </div>
+          <button onClick={() => saveBook(book)}>Spara till din bokhylla</button>
           <button onClick={goBack}>Sök efter fler böcker</button>
+          <button onClick={profile}>Gå till min bokhylla</button>
         </div>
       )}
     </div>

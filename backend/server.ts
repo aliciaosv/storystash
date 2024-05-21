@@ -17,6 +17,7 @@ let database: Database
 
 const app = express()
 app.use(cors())
+
 app.use(express.json())
 
 app.get('/', (_request, response) => {
@@ -101,15 +102,36 @@ app.delete('/storystash/users/:userID', async (req, res) => {
 
 //Spara/Hämta/Ta bort böcker från bokhyllan
 app.post('/storystash/user-bookshelf', async (req, res) => {
-  const { userID, bookID } = req.body
+  const { userID, googleBooksID, title, author, thumbnailURL } = req.body
+
   try {
-    const existingBook = await database.get('SELECT * FROM UserBooks WHERE userID = ? AND bookID = ?', [userID, bookID])
-    if (existingBook) {
+    // Kontrollera om boken redan finns i Books-tabellen
+    const existingBook = await database.get('SELECT * FROM Books WHERE googleBooksID = ?', [googleBooksID])
+
+    let bookID;
+    if (!existingBook) {
+      // Boken finns inte, lägg till den i Books-tabellen
+      const result = await database.run(
+        'INSERT INTO Books (title, author, thumbnailURL, googleBooksID) VALUES (?, ?, ?, ?)',
+        [title, author, thumbnailURL, googleBooksID]
+      )
+      bookID = result.lastID // Hämta det genererade bookID
+    } else {
+      // Boken finns, använd det befintliga bookID
+      bookID = existingBook.bookID
+    }
+
+    // Kontrollera om boken redan finns i UserBooks för användaren
+    const existingUserBook = await database.get('SELECT * FROM UserBooks WHERE userID = ? AND bookID = ?', [userID, bookID])
+    if (existingUserBook) {
       return res.status(400).json({ message: 'Boken finns redan i bokhyllan' })
     }
-    const result = await database.run('INSERT INTO UserBooks (userID, bookID) VALUES (?,?)', [userID, bookID])
-    res.status(201).json({ message: 'Boken är tillagd', userBookID: result.lastID })
+
+    // Lägg till boken i UserBooks-tabellen
+    const userBookResult = await database.run('INSERT INTO UserBooks (userID, bookID) VALUES (?, ?)', [userID, bookID])
+    res.status(201).json({ message: 'Boken är tillagd', userBookID: userBookResult.lastID })
   } catch (error) {
+    console.error(error)
     res.status(500).json({ error: (error as Error).message })
   }
 })
