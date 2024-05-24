@@ -24,6 +24,8 @@ const SearchResult: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const { user } = useUser()
 
+  console.log('Inloggad person:', user)
+
   useEffect(() => {
     const bookDetails = async () => {
       try {
@@ -34,7 +36,7 @@ const SearchResult: React.FC = () => {
           setFilteredDescription(bookData.volumeInfo.description.replace(/<p[^>]*>/g, '').replace(/<\/p>/g, ''))
         }
       } catch (error) {
-        console.error('Knas i bookDetails', error)
+        console.error('Knas i knausgård i bookDetails', error)
       }
     }
 
@@ -42,7 +44,7 @@ const SearchResult: React.FC = () => {
   }, [id])
 
   const goBack = () => {
-    navigate('/')
+    navigate('/booksearch')
   }
 
   const profile = () => {
@@ -53,26 +55,48 @@ const SearchResult: React.FC = () => {
 
   const saveBook = async (book: Book) => {
     if (!user) {
-      alert('Du måste vara inloggad för att spara en bok')
-      return
+      alert('Du måste vara inloggad för att spara en bok');
+      return;
     }
 
     try {
-      const response = await axios.post('http://localhost:3004/storystash/user-bookshelf', {
-        userID: user.id,
-        googleBooksID: id,
-        title: book.volumeInfo.title,
-        author: book.volumeInfo.authors?.[0] || 'Okänd författare',
-        thumbnailURL: book.volumeInfo.imageLinks?.thumbnail || ''
-      })
-      if (response.status === 201) {
-        alert('Boken är tillagd i din bokhylla!')
+      const checkResponse = await axios.get(`http://localhost:3004/storystash/books/check/${book.volumeInfo.title}`);
+      let bookID;
+
+      if (checkResponse.data.exists) {
+        bookID = checkResponse.data.bookID;
+        console.log('checkresponse-svaret:', bookID)
+      } else {
+        const addResponse = await axios.post('http://localhost:3004/storystash/books', {
+          title: book.volumeInfo.title,
+          author: book.volumeInfo.authors?.[0] || 'Okänd författare',
+          publishedDate: book.volumeInfo.publishedDate || '',
+          bookDescription: book.volumeInfo.description || '',
+          thumbnailURL: book.volumeInfo.imageLinks?.thumbnail || '',
+          googleBooksID: id
+        });
+
+        bookID = addResponse.data.bookID;
+        console.log('addresponse:',addResponse);
       }
-      console.log(response.data.message)
+        // Om boken inte fanns i Books-tabellen, lägg till den i user-bookshelf
+        const toUserBook = await axios.post('http://localhost:3004/storystash/user-bookshelf', {
+          userID: user.userID,
+          bookID: bookID,
+        })
+        console.log('Userid:', user.userID, 'Bokens id:', bookID)
+
+        if (toUserBook.status === 201) {
+          alert('Boken är tillagd i din bokhylla!');
+          console.log('Sparad bok till userBooks:', toUserBook.data);
+        }
+
     } catch (error) {
-      console.error('Kunde inte spara boken, försök igen', error)
+      console.error('Kunde inte spara boken, försök igen', error);
     }
-  }
+  };
+
+
 
   return (
     <div>
