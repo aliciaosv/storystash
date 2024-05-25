@@ -1,5 +1,4 @@
 // https://react.dev/reference/react/useContext
-
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 
 interface User {

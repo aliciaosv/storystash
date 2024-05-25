@@ -1,18 +1,19 @@
 import './App.css'
 import './components/BookSearch'
 import AppRoutes from './routes'
-// import NavBar from './components/NavBar'
+import NavBar from './components/NavBar'
 import { UserProvider } from './components/UserContext'
+import { BrowserRouter as Router } from 'react-router-dom'
 
 function App() {
   return (
     <UserProvider>
-      {/* <div>
+      <Router>
         <NavBar />
-      </div> */}
-      <div>
-        <AppRoutes />
-      </div>
+        <div className='contents'>
+          <AppRoutes />
+        </div>
+      </Router>
     </UserProvider>
   )
 }
