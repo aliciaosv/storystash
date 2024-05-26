@@ -23,6 +23,7 @@ app.get('/', (_request, response) => {
   response.send('Hej hallå!')
 })
 
+//-----------------------------------------------------------------------------
 //Användarroutes:
 app.post('/storystash/register', async (req, res) => {
   try {
@@ -181,7 +182,7 @@ app.get('/storystash/user-bookshelf/:userID', async (req, res) => {
   }
 
 })
-
+//Ta bort en bok från sin bokhylla
 app.delete('/storystash/user-bookshelf/:userBookID', async (req, res) => {
   const userBookID = req.params.userBookID
   try {
@@ -191,6 +192,80 @@ app.delete('/storystash/user-bookshelf/:userBookID', async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ error: (error as Error).message })
+  }
+})
+
+//----------------------------------------------------------------------------
+//Recensioner:
+
+app.get('/storystash/reviews', async (req, res) => {
+  try {
+    const reviews = await database.all('SELECT * FROM Reviews')
+    res.json(reviews)
+  } catch(error) {
+    res.status(500).json({ error: (error as Error).message })
+  }
+})
+
+app.get('/storystash/reviews/:bookID', async (req, res) => {
+  const bookID = req.params.bookID
+  try {
+    const reviews = await database.all('SELECT * FROM Reviews WHERE bookID = ?', [bookID])
+    res.json(reviews)
+  } catch(error) {
+    res.status(500).json({ error: (error as Error).message })
+  }
+})
+
+app.post('/storystash/reviews', async (req, res) => {
+  const { userID, bookID, rating, comment } = req.body
+  console.log('Jag tar emot härifrån:', { userID, bookID, rating, comment })
+
+  if (!userID || !bookID || typeof rating !== 'number' || !comment) {
+    return res.status(400).json({ error: 'Fel data skickas iväg härifrån' })
+  }
+
+  try {
+    console.log('Kör SQL-fråga:', 'SELECT * FROM UserBooks WHERE userID = ? AND bookID = ?', [userID, bookID])
+    const userBook = await database.get('SELECT * FROM UserBooks WHERE userID = ? AND bookID = ?', [userID, bookID])
+    if (!userBook) {
+      return res.status(400).json({ error: 'Du kan bara recensera böcker du lagt till i bokhyllan' })
+    }
+    console.log('Kör SQL-fråga:', 'INSERT INTO Reviews (userID, bookID, rating, comment) VALUES (?, ?, ?, ?)', [userID, bookID, rating, comment])
+    await database.run('INSERT INTO Reviews (userID, bookID, rating, comment) VALUES (?, ?, ?, ?)', [userID, bookID, rating, comment])
+    res.status(201).json({ message: 'Recension tillagd!' })
+  } catch(error) {
+    console.error('Något gick fel i routes:', error)
+    res.status(500).json({ error: (error as Error).message })
+  }
+})
+
+app.get('/storystash/reviews/:bookID', async (req, res) => {
+  const { bookID } = req.params
+  try {
+    const reviews = await database.all('SELECT * FROM Reviews WHERE bookID = ?', [bookID])
+    res.json(reviews)
+  } catch (error) {
+    console.log('Det gick fel i get-routen för reviews', error)
+    res.status(500).json({ error: (error as Error).message })
+  }
+})
+
+app.get('/storystash/user-bookshelf/:userID/:bookID', async (req, res) => {
+  const { userID, bookID } = req.params
+  console.log('Kollar userID och bookID:', { userID, bookID })
+  try {
+    const userBook = await database.get('SELECT * FROM UserBooks WHERE userID = ? AND bookID = ?', [userID, bookID])
+    console.log('Resultatet härifrån  :userID/:bookID:', userBook)
+    if (userBook) {
+      res.json({ exists: true, userBookID: userBook.userBookID });
+    } else {
+      res.json({ exists: false })
+    }
+
+  } catch (error) {
+    console.log('Det gick fel när vi försökte hämta boken i bokhyllan', error)
+    res.status(500).json({ error: (error as Error).message });
   }
 })
 

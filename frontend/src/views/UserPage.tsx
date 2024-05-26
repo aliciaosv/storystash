@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom'
+import ReviewsList from '../components/ListReviews'
 import { useUser } from '../components/UserContext'
+import  Review  from '../components/PostReview'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 
@@ -13,6 +15,7 @@ interface Book {
 
 const UserPage: React.FC = () => {
   const [books, setBooks] = useState<Book[]>([])
+  const [selectedBook, setSelectedBook] = useState<number | null>(null)
   const { user } = useUser()
 
   console.log('Inloggad person:', user)
@@ -58,6 +61,8 @@ const UserPage: React.FC = () => {
     return <div>Du är inte inloggad. Logga in för att spara böcker och recensera dem!</div>
   }
 
+  const bookInfo = selectedBook ? books.find(book => book.userBookID === selectedBook): null
+
   return (
     <>
       <div>
@@ -71,13 +76,28 @@ const UserPage: React.FC = () => {
               <h5>{book.title}</h5>
               <p>{book.author}</p>
               <img src={book.thumbnailURL} alt={book.title} />
+              <button onClick={() => setSelectedBook(book.bookID)}>Recensera boken</button>
               <button onClick={() => removeBook(book.userBookID)}>Ta bort boken</button>
             </div>
           ))
         )}
       </div>
+      {selectedBook && (
+        <Review
+          userID={user.userID}
+          bookID={selectedBook}
+          // title={books.find(book => book.userBookID === selectedBook)?.title}
+          addedReview={() => setSelectedBook(null)}
+        />
+      )}
       <div>
         <p>Vill du ha fler böcker i listan? <Link to="/booksearch">Lägg till några!</Link></p>
+      </div>
+      <div>
+        <h4>Dina recensioner:</h4>
+        {bookInfo?.bookID && (
+          <ReviewsList bookID={bookInfo.bookID} />
+        )}
       </div>
     </>
   )

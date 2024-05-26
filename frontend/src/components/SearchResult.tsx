@@ -24,6 +24,7 @@ const SearchResult: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const { user } = useUser()
 
+
   console.log('Inloggad person:', user)
 
   useEffect(() => {
@@ -123,6 +124,7 @@ const SearchResult: React.FC = () => {
           <button onClick={() => saveBook(book)}>Spara till din bokhylla</button>
           <button onClick={goBack}>Sök efter fler böcker</button>
           <button onClick={profile}>Gå till min bokhylla</button>
+
         </div>
       )}
     </div>
