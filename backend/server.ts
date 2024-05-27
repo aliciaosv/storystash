@@ -244,27 +244,26 @@ app.post('/storystash/reviews', async (req, res) => {
 //posta recension med användarid inkluderat:
 app.post('/storystash/reviews/user/:userID', async (req, res) => {
   const userID = req.params.userID;
-  const { bookID, rating, comment } = req.body;
+  const { bookID, rating, comment } = req.body
 
   if (!userID || !bookID || typeof rating !== 'number' || !comment) {
-    return res.status(400).json({ error: 'Felaktiga recensionsdata' });
+    return res.status(400).json({ error: 'Felfelfel' })
   }
-
   try {
     // Kontrollera om användaren har boken i sin bokhylla
-    const userBook = await database.get('SELECT * FROM UserBooks WHERE userID = ? AND bookID = ?', [userID, bookID]);
+    const userBook = await database.get('SELECT * FROM UserBooks WHERE userID = ? AND bookID = ?', [userID, bookID])
     if (!userBook) {
-      return res.status(400).json({ error: 'Du kan bara recensera böcker som du har lagt till i din bokhylla' });
+      return res.status(400).json({ error: 'Du kan bara recensera böcker som du har lagt till i din bokhylla' })
     }
 
     // Lägg till recensionen i databasen
-    await database.run('INSERT INTO Reviews (userID, bookID, rating, comment) VALUES (?, ?, ?, ?)', [userID, bookID, rating, comment]);
+    await database.run('INSERT INTO Reviews (userID, bookID, rating, comment) VALUES (?, ?, ?, ?)', [userID, bookID, rating, comment])
 
     // Skicka svar till klienten
-    res.status(201).json({ message: 'Recensionen har lagts till!' });
+    res.status(201).json({ message: 'Recensionen har lagts till!' })
   } catch (error) {
-    console.error('Något gick fel i routes:', error);
-    res.status(500).json({ error: 'Ett internt fel uppstod vid hantering av din förfrågan' });
+    console.error('Något gick fel i routes:', error)
+    res.status(500).json({ error: (error as Error).message })
   }
 });
 

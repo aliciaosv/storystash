@@ -6,6 +6,11 @@ interface Review {
   userID: number
   rating: number
   comment: string
+  bookID: number
+}
+
+interface BookReview extends Review {
+  bookTitle: string
 }
 
 interface ListProps {
@@ -14,7 +19,7 @@ interface ListProps {
 }
 
 const ReviewsList: React.FC<ListProps> = ({ userID, bookID }) => {
-  const [reviews, setReviews] = useState<Review[]>([])
+  const [reviews, setReviews] = useState<BookReview[]>([])
 
   useEffect(() => {
     const getReviews = async () => {
@@ -27,8 +32,13 @@ const ReviewsList: React.FC<ListProps> = ({ userID, bookID }) => {
         } else {
           return
         }
-
-        setReviews(response.data)
+        const joinTitles = await Promise.all(
+          response.data.map(async (review: Review) => {
+            const bookResponse = await axios.get(`http://localhost:3004/storystash/books/${review.bookID}`)
+            return {... review, bookTitle: bookResponse.data.title}
+          })
+        )
+        setReviews(joinTitles)
       } catch (error) {
         console.error('Kunde inte hämta några recensioner', error)
       }
@@ -46,6 +56,7 @@ const ReviewsList: React.FC<ListProps> = ({ userID, bookID }) => {
         <ul>
           {reviews.map((review) => (
             <li key={review.reviewID}>
+              <p>Bok: {review.bookTitle}</p>
               <p>Betyg: {review.rating}</p>
               <p>Kommentar: {review.comment}</p>
             </li>
