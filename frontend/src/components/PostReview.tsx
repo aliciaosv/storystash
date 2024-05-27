@@ -2,7 +2,7 @@ import { useState } from 'react'
 import axios from 'axios'
 
 interface Reviews {
-  userID: string
+  userID: number
   bookID: number
   addedReview: () => void
 }
@@ -23,7 +23,7 @@ const Review: React.FC<Reviews> = ({ userID, bookID, addedReview }) => {
 
       console.log('Recension som försöker skickas:', { userID, bookID, rating, comment })
 
-      await axios.post('http://localhost:3004/storystash/reviews', {
+      await axios.post(`http://localhost:3004/storystash/reviews/user/${userID}`, {
         userID,
         bookID,
         rating,
