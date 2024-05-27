@@ -4,6 +4,7 @@ import  Review  from '../components/PostReview'
 import { useUser } from '../components/UserContext'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
+import { Button } from 'react-bootstrap'
 
 interface Book {
   userBookID: number
@@ -17,6 +18,7 @@ const UserPage: React.FC = () => {
   const [books, setBooks] = useState<Book[]>([])
   const [selectedBook, setSelectedBook] = useState<number | null>(null)
   const [refreshReviews, setRefreshReviews] = useState(false)
+  const [theModal, setTheModal] = useState<boolean>(false)
   const { user } = useUser()
 
   console.log('Inloggad person:', user)
@@ -65,26 +67,40 @@ const UserPage: React.FC = () => {
   const bookInfo = selectedBook ? books.find(book => book.userBookID === selectedBook) : null
   console.log('logg från bookInfo:',bookInfo)
 
-  const handleReviewAdded = () => {
+  const handleReviews = () => {
     setSelectedBook(null);
     setRefreshReviews(prev => !prev)
+    setTheModal(false)
   }
 
   return (
     <>
       <div>
-        <h2>Välkommen tillbaka, {user.username}!</h2>
-        <h4>Dina sparade böcker:</h4>
+        <div className='container-box'>
+          <h2 className='header'>Välkommen tillbaka, {user.username}!</h2>
+          <h4 className='welcome'>Dina sparade böcker:</h4>
+        </div>
         {books.length === 0 ? (
           <p>Du har inte sparat några böcker. <Link to="/booksearch">Lägg till några!</Link></p>
         ) : (
           books.map((book) => (
-            <div key={book.userBookID}>
-              <h5>{book.title}</h5>
-              <p>{book.author}</p>
-              <img src={book.thumbnailURL} alt={book.title} />
-              <button onClick={() => setSelectedBook(book.bookID)}>Recensera boken</button>
-              <button onClick={() => removeBook(book.userBookID)}>Ta bort boken</button>
+            <div key={book.userBookID} className='saved-books'>
+              <div className='book-container'>
+                <h5 className='header'>{book.title}</h5>
+                <p>{book.author}</p>
+                <img src={book.thumbnailURL} alt={book.title} className='book-thumbnail'/>
+              </div>
+              <div className='review-button'>
+                <Button onClick={() => {
+                  setSelectedBook(book.bookID)
+                  setTheModal(true)
+                }}
+                className='custom-button'
+                >Recensera boken</Button>
+              </div>
+              <div className='add-more'>
+                <button onClick={() => removeBook(book.userBookID)}>Ta bort boken</button>
+              </div>
             </div>
           ))
         )}
@@ -93,16 +109,23 @@ const UserPage: React.FC = () => {
         <Review
         userID={Number(user.userID)}
         bookID={selectedBook}
-        addedReview={handleReviewAdded}
-      />
+        show={theModal}
+        handleClose={() => setTheModal(false)}
+        addedReview={handleReviews}
+        />
       )}
       <div>
         <p>Vill du ha fler böcker i listan? <Link to="/booksearch">Lägg till några!</Link></p>
       </div>
-      <div>
-        <h4>Dina recensioner:</h4>
-        <ReviewsList userID={Number(user.userID)} key={String(refreshReviews)} />
-      </div>
+      {/* <div className='saved-books'> */}
+        <div className='book-container'>
+          <h4>Dina recensioner:</h4>
+          <ReviewsList
+          userID={Number(user.userID)}
+          key={String(refreshReviews)}
+          />
+        </div>
+
     </>
   )
 }

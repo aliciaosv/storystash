@@ -1,21 +1,30 @@
 import Login from '../components/Login'
 import Register from '../components/Register'
+import { useUser } from '../components/UserContext'
+// import library from '../assets/library.jpg'
 
 const HomePage: React.FC = () => {
+  const { user } = useUser()
 
   return (
     <>
-    <div>
-      <h1>Välkommen till StoryStash!</h1>
-      <h4>Upptäck böcker du vill läsa, spara dem i din bokhylla och recensera!</h4>
-    </div>
-    <div>
-      <Login />
-    </div>
-    <div>
-      <h2>Inte medlem än?</h2>
-      <Register />
-    </div>
+      <div className='homepage'>
+        <div>
+          <h1 className='header-home'>Välkommen till StoryStash!</h1>
+          <h4 className='welcome-text'>Upptäck böcker du vill läsa, spara dem i din bokhylla och recensera dem!</h4>
+        </div>
+        {!user && (
+          <>
+            <div>
+              <Login />
+            </div>
+            <div>
+              <h2 className='header-home'>Inte medlem än?</h2>
+              <Register />
+            </div>
+          </>
+        )}
+      </div>
     </>
   )
 

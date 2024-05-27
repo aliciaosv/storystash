@@ -55,11 +55,14 @@ const ReviewsList: React.FC<ListProps> = ({ userID, bookID }) => {
       ) : (
         <ul>
           {reviews.map((review) => (
-            <li key={review.reviewID}>
-              <p>Bok: {review.bookTitle}</p>
-              <p>Betyg: {review.rating}</p>
-              <p>Kommentar: {review.comment}</p>
-            </li>
+            <div className='saved-books'>
+              <li key={review.reviewID}>
+                <p>Bok: {review.bookTitle}</p>
+                <p>Betyg: {review.rating}</p>
+                <p>Kommentar: {review.comment}</p>
+                <button>Ta bort recension</button>
+              </li>
+            </div>
           ))}
         </ul>
       )}

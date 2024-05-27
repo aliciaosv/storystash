@@ -26,22 +26,27 @@ const Login: React.FC = () => {
   }
 
   return (
-    <div>
-      <h2>Logga in</h2>
-      <input
-        type="email"
-        placeholder="Mailadress"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Lösenord"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={loginUser}>Logga in</button>
-      {message && <p>{message}</p>}
+    <div className='center'>
+      <div className='login'>
+        <h2 className='header-home'>Logga in</h2>
+        <input
+          type="email"
+          placeholder="Mailadress"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className='inputfield'
+        />
+        <input
+          type="password"
+          placeholder="Lösenord"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className='inputfield'
+
+        />
+        <button onClick={loginUser}>Logga in</button>
+        {message && <p>{message}</p>}
+      </div>
     </div>
   )
 }

@@ -103,12 +103,12 @@ const SearchResult: React.FC = () => {
 
 
   return (
-    <div>
+    <div className='result'>
       {book && (
         <div>
           <div>
             <div>
-            <h2>{book.volumeInfo.title}</h2>
+            <h2 className='header'>{book.volumeInfo.title}</h2>
               <h3>{book.volumeInfo.authors?.join(', ') || 'Okänd författare'}</h3>
               <p>Utgivningsår: {book.volumeInfo.publishedDate || 'Ej tillgängligt'}</p>
               <p>Förlag: {book.volumeInfo.publisher || 'Ej tillgängligt'}</p>
@@ -121,9 +121,9 @@ const SearchResult: React.FC = () => {
               <img src={bookCover} alt={book.volumeInfo.title} />
             </div>
           </div>
-          <button onClick={() => saveBook(book)}>Spara till din bokhylla</button>
-          <button onClick={goBack}>Sök efter fler böcker</button>
-          <button onClick={profile}>Gå till min bokhylla</button>
+          <button onClick={() => saveBook(book)} className='result-button'>Spara till din bokhylla</button>
+          <button onClick={goBack} className='result-button'>Sök efter fler böcker</button>
+          <button onClick={profile} className='result-button'>Gå till min bokhylla</button>
 
         </div>
       )}

@@ -15,7 +15,7 @@ const NavBar: React.FC = () => {
   return (
     <Navbar bg='light' expand='lg'>
       <Container>
-        <Navbar.Brand as={Link} to='/'>StoryStash</Navbar.Brand>
+        <Navbar.Brand as={Link} to='/' className='header'>StoryStash</Navbar.Brand>
         <Navbar.Toggle aria-controls='basic-navbar-nav' />
         <Navbar.Collapse id='basic-navbar-nav'>
           <Nav className='me-auto'>
@@ -24,10 +24,10 @@ const NavBar: React.FC = () => {
             {user ? (
               <>
                 <Nav.Link as={Link} to='/userpage'>Min bokhylla</Nav.Link>
-                <Nav.Item className='ms-auto'>
+                <Nav className="ms-auto d-flex justify-content-end    align-items-center">
                   <span>Inloggad som {user.username}</span>
-                </Nav.Item>
-                <Button variant='outline-danger' onClick={whenLogout} className='ms-2'>Logga ut</Button>
+                  <Button variant='outline-danger' onClick={whenLogout} className='ms-1'>Logga ut</Button>
+                </Nav>
               </>
             ) : (
               <Nav.Link as={Link} to='/login'>Logga in</Nav.Link>

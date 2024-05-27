@@ -1,75 +1,219 @@
-/* :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #383838;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Josefin Sans */
+@font-face {
+  font-family: 'Josefin Sans';
+  src: url('../src/fonts/JosefinSans-VariableFont_wght.ttf') format('truetype');
+  font-weight: lighter;
+  font-style: normal;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+/* Yeseva One */
+@font-face {
+  font-family: 'Yeseva One';
+  src: url('../src/fonts/YesevaOne-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
 
 body {
-  background-color: #383838;
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
+  font-family: 'Josefin Sans';
+  background-color: #FFFDED;
 }
 
-.contents {
-  display: flex;
-  place-items: center;
-  flex-direction: column;
+.homepage {
+  background-image: url('../src/assets/library.jpg');
+  background-size: cover;
+  background-position: center;
   height: 100vh;
-  padding: 20px;
+  overflow-y: hidden;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+.homepage-img {
+  width: 100%
+}
+
+p, button, .navbar, .btn, .welcome, h3 {
+  font-family: 'Josefin Sans', sans-serif !important;
+}
+
+.header {
+  font-family: 'Yeseva One', sans-serif;
+}
+.header-home, .welcome-text {
+  margin-top: 40px;
+  font-family: 'Yeseva One', sans-serif;
+  color: #FFFDED;
+}
+
+.welcome-text {
+  font-family: 'Josefin Sans', sans-serif !important;
+  color: #FFFDED;
+}
+.center {
+  display: flex;
+  justify-content: center;
+}
+
+.container-box {
+  margin-top: 40px;
+}
+
+.login {
+  align-items: center;
+  width: 500px;
+  padding: 10px;
+  /* border: 1px solid #ccc; */
+  border-radius: 2px;
+  justify-content: center;
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+  width: 100%;
+  margin: 10px;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #eaeedb;
+  color: #533c2e;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
 }
 
-/* @media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-} */
+.inputfield {
+  width: 100%;
+  display: block;
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* ---------------------------UserPage------------------------------- */
+
+.saved-books {
+  width: 100%;
+  max-width: 600px;
+  margin: auto;
+  margin-bottom: 20px;
+  margin-top: 40px;
+  padding: 20px;
+  border: 1px dotted #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.result-books img {
+  width: 190px;
+  height: 200px;
+  object-fit: contain;
+}
+
+.result-books {
+  display: flex;
+  flex-direction: column; /* Sätt flexriktningen till column */
+  justify-content: space-between; /* Placera innehållet längst ner i div */
+  margin-bottom: 20px;
+  align-items: center;
+  padding: 20px;
+  border: 1px dotted #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.search-result {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 2fr));
+  grid-gap: 20px;
+  max-width: 1200px;
+  width: 100%;
+  margin: auto;
+  margin-bottom: 20px;
+  margin-top: 40px;
+}
+
+.result-button {
+  align-self: flex-end;
+}
+
+.book-container {
+  margin-bottom: 20px;
+  padding: 10px;
+  /* border: 1px dotted #ccc; */
+  border-radius: 3px;
+}
+.book-thumbnail {
+  width: 100px;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #234340;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.custom-button {
+  color: #FFFDED !important;
+  background-color: #234340 !important;
+  border-color: #234340 !important;
+}
+
+.custom-button:hover {
+  color: #234340 !important;
+  background-color: #FFFDED !important;
+  border-color: #234340 !important;
+}
+
+.add-more {
+  font-family: 'Josefin Sans', sans-serif;
+  color: #234340;
+  text-align: center;
+  margin-top: 20px;
+}
+.review-section {
+  margin-top: 40px;
+}
+
+ul {
+  list-style: none;
+}
+li {
+  font-weight: 400;
+}
+
+.result {
+  width: 100%;
+  max-width: 900px;
+  margin: auto;
+  margin-bottom: 20px;
+  margin-top: 40px;
+  padding: 20px;
+  border: 1px dotted #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.result-button {
+  width: 100%;
+  padding: 10px;
+  margin: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #234340;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.navbar-nav .nav-item {
+  margin-left: 15px !important; /* Mellanrum mellan länkarna */
+}
+
+.navbar-nav .nav-link {
+  font-family: 'Josefin Sans', sans-serif;
+  color: #234340 !important; /* Anpassa färg efter behov */
+}

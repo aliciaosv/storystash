@@ -66,27 +66,28 @@ const BookSearch: React.FC = () => {
 
   return (
     <div>
-      <div>
-        <h1>Sök efter en bok!</h1>
+      <div className='saved-books'>
+        <h1 className='header'>Sök efter en bok!</h1>
         <input
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           onKeyDown={alternateSearch}
           placeholder="T.ex Karin Boye, Pippi..."
+          className='inputfield'
         />
         <button onClick={searchBook}>Sök</button>
       </div>
 
       {books.length > 0 && (
-        <div>
+        <div className='search-result'>
           {books.map((book) => (
-            <div key={book.id}>
+            <div key={book.id} className='result-books'>
               <img src={bookCover(book)} alt={book.volumeInfo.title} />
               <div>
-                <h4>{book.volumeInfo.title}</h4>
+                <h4 className='header'>{book.volumeInfo.title}</h4>
                 <p>{book.volumeInfo.description}</p>
-                <button onClick={() => chosen(book.id)}>Läs mer</button>
+                <button onClick={() => chosen(book.id)} className='result-button'>Läs mer</button>
               </div>
             </div>
           ))}
