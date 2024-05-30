@@ -73,20 +73,6 @@ app.get('/storystash/users/:userID', async (req, res) => {
   }
 })
 
-app.put('/storystash/users/:userID', async (req, res) => {
-  const userID = req.params.userID
-  const { username, email, password } = req.body
-  try {
-    const result = await database.run('UPDATE Users SET username = ?, email = ?, password = ? WHERE userID = ?', [username, email, password, userID])
-    if (result.changes === 0) {
-      return res.status(404).json({ message: 'Användaren hittades inte' })
-    }
-    res.json({ message: 'Användaren uppdaterad.' })
-  } catch (error) {
-    res.status(500).json({ error: (error as Error).message })
-  }
-})
-
 app.delete('/storystash/users/:userID', async (req, res) => {
   const userID = req.params.userID
   try {
@@ -155,7 +141,6 @@ app.get('/storystash/books/:bookID', async (req, res) => {
   }
 })
 
-
 //Spara/Hämta/Ta bort böcker från bokhyllan
 app.post('/storystash/user-bookshelf', async (req, res) => {
   const { userID, bookID } = req.body
@@ -182,6 +167,7 @@ app.get('/storystash/user-bookshelf/:userID', async (req, res) => {
   }
 
 })
+
 //Ta bort en bok från sin bokhylla
 app.delete('/storystash/user-bookshelf/:userBookID', async (req, res) => {
   const userBookID = req.params.userBookID
@@ -207,6 +193,7 @@ app.get('/storystash/reviews', async (req, res) => {
   }
 })
 
+//Hitta alla recensioner som gäller en bok
 app.get('/storystash/reviews/book/:bookID', async (req, res) => {
   const bookID = req.params.bookID
   try {
@@ -231,7 +218,9 @@ app.post('/storystash/reviews', async (req, res) => {
     if (!userBook) {
       return res.status(400).json({ error: 'Du kan bara recensera böcker du lagt till i bokhyllan' })
     }
+    //bara en loggis-----------------------------------------------------
     console.log('Kör SQL-fråga:', [userID, bookID, rating, comment])
+    //-------------------------------------------------------------------
     await database.run('INSERT INTO Reviews (userID, bookID, rating, comment) VALUES (?, ?, ?, ?)', [userID, bookID, rating, comment])
     res.status(201).json({ message: 'Recension tillagd!' })
   } catch(error) {
@@ -239,7 +228,6 @@ app.post('/storystash/reviews', async (req, res) => {
     res.status(500).json({ error: (error as Error).message })
   }
 })
-
 
 //posta recension med användarid inkluderat:
 app.post('/storystash/reviews/user/:userID', async (req, res) => {
@@ -250,16 +238,16 @@ app.post('/storystash/reviews/user/:userID', async (req, res) => {
     return res.status(400).json({ error: 'Felfelfel' })
   }
   try {
-    // Kontrollera om användaren har boken i sin bokhylla
+    // Kontrollerar om användaren har boken i sin bokhylla
     const userBook = await database.get('SELECT * FROM UserBooks WHERE userID = ? AND bookID = ?', [userID, bookID])
     if (!userBook) {
       return res.status(400).json({ error: 'Du kan bara recensera böcker som du har lagt till i din bokhylla' })
     }
 
-    // Lägg till recensionen i databasen
+    // Lägger till recensionen i databasen
     await database.run('INSERT INTO Reviews (userID, bookID, rating, comment) VALUES (?, ?, ?, ?)', [userID, bookID, rating, comment])
 
-    // Skicka svar till klienten
+
     res.status(201).json({ message: 'Recensionen har lagts till!' })
   } catch (error) {
     console.error('Något gick fel i routes:', error)
@@ -291,6 +279,23 @@ app.get('/storystash/reviews/user/:userID', async (req, res) => {
   }
 })
 
+//Ta bort recension baserat på vilken användare och vilken bok
+app.delete('/storystash/reviews/:reviewID/:userID', async (req, res) => {
+  const { reviewID, userID } = req.params
+
+  try{
+    const review = await database.get('SELECT * FROM Reviews WHERE reviewID = ? AND userID = ?', [reviewID, userID])
+    if (!review) {
+      return res.status(404).json({ error: 'Kunde inte hitta recensionen' })
+    }
+    await database.run('DELETE FROM Reviews WHERE reviewID = ? AND userID = ?', [reviewID, userID])
+    res.status(200).json({ message: 'Recension borttagen!' })
+  } catch (error) {
+    res.status(500).json({ error: (error as Error).message })
+  }
+})
+
+//Testroute för min del. Funkar den använd den pls future me
 app.get('/storystash/user-bookshelf/:userID/:bookID', async (req, res) => {
   const { userID, bookID } = req.params
   console.log('Kollar userID och bookID:', { userID, bookID })

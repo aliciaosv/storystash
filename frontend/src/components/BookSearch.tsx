@@ -80,6 +80,7 @@ const BookSearch: React.FC = () => {
       </div>
 
       {books.length > 0 && (
+        <>
         <div className='search-result'>
           {books.map((book) => (
             <div key={book.id} className='result-books'>
@@ -91,8 +92,11 @@ const BookSearch: React.FC = () => {
               </div>
             </div>
           ))}
-          <button onClick={moreBooks}>Ladda fler böcker</button>
         </div>
+          <div className='center'>
+            <button onClick={moreBooks}>Ladda fler böcker</button>
+          </div>
+        </>
       )}
     </div>
   )

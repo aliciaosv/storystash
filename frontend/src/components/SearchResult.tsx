@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useUser } from './UserContext'
+// import Review from './PostReview'
 
 interface Book {
   volumeInfo: {
@@ -17,8 +18,19 @@ interface Book {
   }
 }
 
+// interface Review {
+//   reviewID: number
+//   userID: number
+//   bookID: number
+//   rating: number
+//   comment: string
+//   createdAt: string
+// }
+
 const SearchResult: React.FC = () => {
   const [book, setBook] = useState<Book | null>(null)
+  // const [reviews, setReviews] = useState<Review[]>([])
+  // const [bookID] = useState('')
   const [regexDesc, setRegexDesc] = useState<string | null>(null)
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
@@ -38,6 +50,7 @@ const SearchResult: React.FC = () => {
           //Jag vill bara skryta om att jag nördade ner mig lite i RegEx. Verkar dock inte fungera på alla descriptions av någon anledning, men väldigt många ser betydligt snyggare ut än innan!
           setRegexDesc(bookData.volumeInfo.description.replace(/<p[^>]*>/g, '').replace(/<\/p>/g, ''))
         }
+
       } catch (error) {
         console.error('Knas i knausgård i bookDetails', error)
       }
@@ -98,7 +111,10 @@ const SearchResult: React.FC = () => {
     } catch (error) {
       console.error('Kunde inte spara boken, försök igen', error);
     }
-  };
+
+    // const othersReviews = await axios.get(`http://localhost:3004/storystash/reviews/${bookID}`)
+    // setReviews(othersReviews.data)
+  }
 
 
 
@@ -124,9 +140,22 @@ const SearchResult: React.FC = () => {
           <button onClick={() => saveBook(book)} className='result-button'>Spara till din bokhylla</button>
           <button onClick={goBack} className='result-button'>Sök efter fler böcker</button>
           <button onClick={profile} className='result-button'>Gå till min bokhylla</button>
-
         </div>
       )}
+      {/* <h4>Vad tyckte andra om boken?</h4>
+      <div>
+        {reviews.length > 0 ? (
+          reviews.map((review) => (
+            <div key={review.bookID}>
+              <p>Betyg: {review.rating}</p>
+              <p>Kommentar: {review.comment}</p>
+              <p>Skapad: {review.createdAt}</p>
+            </div>
+          ))
+        ): (
+          <p>Den har inte blivit recenserad ännu.</p>
+        )}
+      </div> */}
     </div>
   )
 

@@ -81,7 +81,7 @@ const UserPage: React.FC = () => {
           <h4 className='welcome'>Dina sparade böcker:</h4>
         </div>
         {books.length === 0 ? (
-          <p>Du har inte sparat några böcker. <Link to="/booksearch">Lägg till några!</Link></p>
+          <p>Du har inte sparat några böcker än.</p>
         ) : (
           books.map((book) => (
             <div key={book.userBookID} className='saved-books'>
@@ -117,14 +117,14 @@ const UserPage: React.FC = () => {
       <div>
         <p>Vill du ha fler böcker i listan? <Link to="/booksearch">Lägg till några!</Link></p>
       </div>
-      {/* <div className='saved-books'> */}
+      <div className='divider'>
         <div className='book-container'>
-          <h4>Dina recensioner:</h4>
           <ReviewsList
           userID={Number(user.userID)}
           key={String(refreshReviews)}
           />
         </div>
+      </div>
 
     </>
   )

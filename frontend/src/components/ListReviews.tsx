@@ -47,23 +47,37 @@ const ReviewsList: React.FC<ListProps> = ({ userID, bookID }) => {
     getReviews()
   }, [userID, bookID])
 
+  const deleteReview = async (reviewID: number) => {
+    try {
+      if (userID) {
+        await axios.delete(`http://localhost:3004/storystash/reviews/${reviewID}/${userID}`)
+        setReviews(reviews.filter(review => review.reviewID !== reviewID))
+        alert('Recension borttagen!')
+      } else {
+        console.log('UserID saknas här')
+      }
+    } catch (error) {
+      console.log('Det gick inte att ta bort recensionen', error)
+    }
+  }
+
   return (
     <div>
-      <h4>Recensioner:</h4>
+      <h4 className='header'>Dina recensioner:</h4>
       {reviews.length === 0 ? (
-        <p>Inga recensioner ännu.</p>
+        <p>Du har inte recenserat några böcker än.</p>
       ) : (
         <ul>
-          {reviews.map((review) => (
-            <div className='saved-books'>
-              <li key={review.reviewID}>
-                <p>Bok: {review.bookTitle}</p>
-                <p>Betyg: {review.rating}</p>
-                <p>Kommentar: {review.comment}</p>
-                <button>Ta bort recension</button>
-              </li>
-            </div>
-          ))}
+          <div className='saved-books'>
+            {reviews.map((review) => (
+                <li key={review.reviewID}>
+                  <p>Bok: {review.bookTitle}</p>
+                  <p>Betyg: {review.rating}</p>
+                  <p>Kommentar: {review.comment}</p>
+                  <button onClick={() => deleteReview(review.reviewID)}>Ta bort recension</button>
+                </li>
+            ))}
+          </div>
         </ul>
       )}
     </div>

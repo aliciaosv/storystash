@@ -37,7 +37,6 @@ const Review: React.FC<Reviews> = ({ userID, bookID, addedReview, handleClose, s
       setRating(1)
       setComment('')
       addedReview()
-      close()
     } catch (error) {
       console.log('Det strular i Review-komponenten', error)
     }

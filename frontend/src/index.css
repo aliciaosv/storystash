@@ -178,10 +178,22 @@ button {
   margin-top: 40px;
 }
 
+.divider {
+  max-width: 800px;
+  padding-left: 50px;
+  padding-right: 50px;
+  margin: auto;
+  border-top: 1px solid #234340;
+}
+
 ul {
   list-style: none;
 }
 li {
+  margin: 10px;
+  border: 1px dotted #ccc;
+  border-radius: 5px;
+  padding-top: 10px;
   font-weight: 400;
 }
 
