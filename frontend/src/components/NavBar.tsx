@@ -40,26 +40,3 @@ const NavBar: React.FC = () => {
 }
 
 export default NavBar
-
-// const Navbar: React.FC = () => {
-//   const { user, logout } = useUser()
-
-//   return (
-//     <nav>
-//       <ul>
-//         <li><Link to="/booksearch">Sök Böcker</Link></li>
-//         {user ? (
-//           <>
-//             <li><Link to="/userpage">Min bokhylla</Link></li>
-//             <li>Inloggad som {user.username}</li>
-//             <li><button onClick={logout}>Logga ut</button></li>
-//           </>
-//         ) : (
-//           <li><Link to="/login"></Link></li>
-//         )}
-//       </ul>
-//     </nav>
-//   )
-
-// }
-// export default Navbar

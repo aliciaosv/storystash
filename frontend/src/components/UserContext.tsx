@@ -15,7 +15,7 @@ interface UserContextType {
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined)
-
+//Skapar en provider-komponent som tar barnkomponenter som prop
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(() => {
     const atmUser = localStorage.getItem('user')
@@ -45,6 +45,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   )
 }
 
+//Hook för att använda kontexten ovan
 export const useUser = (): UserContextType => {
   const context = useContext(UserContext)
   if (context === undefined) {

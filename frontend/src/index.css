@@ -35,7 +35,7 @@ p, button, .navbar, .btn, .welcome, h3 {
   font-family: 'Josefin Sans', sans-serif !important;
 }
 
-.header {
+.header, h5 {
   font-family: 'Yeseva One', sans-serif;
 }
 .header-home, .welcome-text {
@@ -108,8 +108,8 @@ button {
 
 .result-books {
   display: flex;
-  flex-direction: column; /* Sätt flexriktningen till column */
-  justify-content: space-between; /* Placera innehållet längst ner i div */
+  flex-direction: column;
+  justify-content: space-between;
   margin-bottom: 20px;
   align-items: center;
   padding: 20px;
@@ -222,10 +222,10 @@ li {
 }
 
 .navbar-nav .nav-item {
-  margin-left: 15px !important; /* Mellanrum mellan länkarna */
+  margin-left: 15px !important;
 }
 
 .navbar-nav .nav-link {
   font-family: 'Josefin Sans', sans-serif;
-  color: #234340 !important; /* Anpassa färg efter behov */
+  color: #234340 !important;
 }

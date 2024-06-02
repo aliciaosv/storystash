@@ -17,6 +17,7 @@ interface Book {
     imageLinks?: {thumbnail: string}
   }
 }
+//Utkommenterade sektioner är en skiss på hur rendering av recensioner på böcker från andra användare skulle kunna se ut. Fungerar inte som tänkt än, men blir mer som ett sidoprojekt senare. Även denna komponenten skulle må bra av att få bli lite uppbruten. Återigen, sidoprojekt
 
 // interface Review {
 //   reviewID: number

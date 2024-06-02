@@ -96,7 +96,7 @@ const UserPage: React.FC = () => {
                   setTheModal(true)
                 }}
                 className='custom-button'
-                >Recensera boken</Button>
+                >Markera som läst</Button>
               </div>
               <div className='add-more'>
                 <button onClick={() => removeBook(book.userBookID)}>Ta bort boken</button>

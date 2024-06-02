@@ -13,6 +13,7 @@ interface Book {
   }
 }
 
+//Borde verkligen refaktorisera denna komponenten och montera i en vy future me
 const BookSearch: React.FC = () => {
   const [search, setSearch] = useState<string>('')
   const [books, setBooks] = useState<Book[]>([])
