@@ -14,7 +14,7 @@ interface Book {
 }
 
 //Borde verkligen refaktorisera denna komponenten och montera i en vy future me
-const BookSearch: React.FC = () => {
+function BookSearch() {
   const [search, setSearch] = useState<string>('')
   const [books, setBooks] = useState<Book[]>([])
   const [startIndex] = useState<number>(0)
@@ -95,7 +95,7 @@ const BookSearch: React.FC = () => {
           ))}
         </div>
           <div className='center'>
-            <button onClick={moreBooks}>Ladda fler böcker</button>
+            <button onClick={moreBooks} className='search-button'>Ladda fler böcker</button>
           </div>
         </>
       )}

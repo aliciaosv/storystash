@@ -10,11 +10,13 @@ function App() {
   return (
     <UserProvider>
       <Router>
-        <NavBar />
-        <div className='contents'>
-          <AppRoutes />
+        <div className='root'>
+          <NavBar />
+          <div className='contents'>
+            <AppRoutes />
+          </div>
+          <Footer />
         </div>
-        <Footer />
       </Router>
     </UserProvider>
   )

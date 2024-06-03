@@ -28,7 +28,7 @@ interface Book {
 //   createdAt: string
 // }
 
-const SearchResult: React.FC = () => {
+function SearchResult() {
   const [book, setBook] = useState<Book | null>(null)
   // const [reviews, setReviews] = useState<Review[]>([])
   // const [bookID] = useState('')

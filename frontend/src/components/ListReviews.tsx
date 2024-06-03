@@ -18,7 +18,7 @@ interface ListProps {
   bookID?: number
 }
 
-const ReviewsList: React.FC<ListProps> = ({ userID, bookID }) => {
+function ReviewsList({ userID, bookID }: ListProps) {
   const [reviews, setReviews] = useState<BookReview[]>([])
 
   useEffect(() => {

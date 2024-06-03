@@ -14,7 +14,7 @@ interface Book {
   thumbnailURL: string
 }
 
-const UserPage: React.FC = () => {
+function UserPage() {
   const [books, setBooks] = useState<Book[]>([])
   const [selectedBook, setSelectedBook] = useState<number | null>(null)
   const [refreshReviews, setRefreshReviews] = useState(false)

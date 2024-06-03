@@ -2,7 +2,7 @@ import { Navbar, Nav, Container, Button } from 'react-bootstrap'
 import { useUser } from './UserContext'
 import { Link, useNavigate } from 'react-router-dom'
 
-const NavBar: React.FC = () => {
+function NavBar() {
   const { user, logout } = useUser()
   const navigate = useNavigate()
 

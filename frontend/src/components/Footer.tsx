@@ -1,14 +1,14 @@
 import 'bootstrap-icons/font/bootstrap-icons.css'
 
-const Footer: React.FC = () => {
+function Footer() {
   return (
-    <footer className='bg-light text-black py-3 text-start'>
+    <footer className='bg-light text-black py-3 text-start mt-auto'>
       <div className='container'>
         <div className='row'>
           <div className='col-md-9'>
             <h5>StoryStash</h5>
             <p>
-              Bara en förstaårselev som landar the best of both worlds, webbutveckling och böcker.
+              Bara en förstaårselev som landar the best of both worlds: webbutveckling och böcker.
             </p>
           </div>
 

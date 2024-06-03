@@ -3,7 +3,7 @@ import Register from '../components/Register'
 import { useUser } from '../components/UserContext'
 // import library from '../assets/library.jpg'
 
-const HomePage: React.FC = () => {
+function HomePage() {
   const { user } = useUser()
 
   return (

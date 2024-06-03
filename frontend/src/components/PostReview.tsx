@@ -10,7 +10,7 @@ interface Reviews {
   addedReview: () => void
 }
 
-const Review: React.FC<Reviews> = ({ userID, bookID, addedReview, handleClose, show }) => {
+function Review({ userID, bookID, addedReview, handleClose, show }: Reviews) {
   const [rating, setRating] = useState<number>(1)
   const [comment, setComment] = useState<string>('')
 

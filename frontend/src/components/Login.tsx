@@ -3,7 +3,7 @@ import { useUser } from './UserContext'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 
-const Login: React.FC = () => {
+function Login() {
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const [message] = useState<string>('')
